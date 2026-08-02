@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한화생명 사내 이벤트 게임 센터</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DungGeonMo&family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app">
+    
+    <!-- Top Brand Header -->
+    <header class="brand-header">
+      <div class="logo-container">
+        <!-- Hanwha Life Circle Logo in SVG -->
+        <div class="hanwha-logo-wrapper">
+          <img class="hanwha-logo-img" src="images/hanwha_logo.png" alt="Hanwha Logo">
+          <span class="hanwha-brand-text">Hanwha</span>
+        </div>
+        <span class="divider">|</span>
+        <span class="header-title">사내 이벤트 게임 센터</span>
+      </div>
+      <div class="header-status">
+        <span class="status-dot"></span> Active Event
+      </div>
+    </header>
+
+    <!-- Main Game Lobby (Lobby Screen) -->
+    <main id="lobby-screen" class="screen active">
+      <div class="lobby-hero">
+        <h1>사내 이벤트 게임 라운지</h1>
+        <p>팀원들과 함께 소통하고 즐길 수 있는 미니게임 공간입니다.</p>
+      </div>
+
+      <div class="game-grid">
+        <!-- Game Card 1: 63 Gondola (Active) -->
+        <div class="game-card active" onclick="switchScreen('game-63-gondola')">
+          <div class="badge">대표 이벤트</div>
+          <div class="card-image-placeholder gondola-bg">
+            <div class="pixel-gondola-art">
+              <span class="pixel-heart">❤️</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3>사랑의 63 곤돌라</h3>
+            <p class="category">커플 매칭 • 레트로 도트</p>
+            <p class="description">63빌딩 외벽 곤돌라를 타고 올라가 운명의 층에서 파트너를 만나세요! 20F~60F에서 매칭된 커플에게 축하 불꽃쇼가 펼쳐집니다.</p>
+            <button class="btn-play">게임 시작</button>
+          </div>
+        </div>
+
+        <!-- Game Card 2: Guess the Movie Hero (Unlocked) -->
+        <div class="game-card active" onclick="switchScreen('game-movie-hero')">
+          <div class="badge">인기 게임</div>
+          <div class="card-image-placeholder movie-hero-bg">
+            <div class="pixel-movie-art">
+              <span class="pixel-star">🎬</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3>무비 히어로 맞추기</h3>
+            <p class="category">마블 & DC • 사진 퀴즈</p>
+            <p class="description">히어로를 연기한 서로 다른 배우들의 영화 속 비주얼 힌트 카드를 보고 어떤 마블/DC 캐릭터인지 맞춰보세요!</p>
+            <button class="btn-play">게임 시작</button>
+          </div>
+        </div>
+
+        <!-- Game Card 3: The Faces of HANWHA (Unlocked) -->
+        <div class="game-card active" onclick="switchScreen('game-hanwha-quiz')">
+          <div class="badge">한화 역사</div>
+          <div class="card-image-placeholder hanwha-lobby-bg">
+            <div class="pixel-movie-art">
+              <span class="pixel-star">👤</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3>한화 인물 퀴즈</h3>
+            <p class="category">한화 알기 • 사진 퀴즈</p>
+            <p class="description">김종희 창업주부터 김승연 회장, 미래 금융 공동 브랜드까지! 한화를 발전시킨 주역들의 온화한 사진과 업적을 보고 정답을 맞춰보세요.</p>
+            <button class="btn-play">게임 시작</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Game Screen: Love 63 Gondola -->
+    <main id="game-63-gondola" class="screen">
+      <!-- Back navigation and Game Title -->
+      <div class="game-nav">
+        <button class="btn-back" onclick="switchScreen('lobby-screen')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          로비로 돌아가기
+        </button>
+        <div class="game-title-area">
+          <h2>사랑의 63 곤돌라</h2>
+          <span class="game-subtitle">Hanwha Life Couple Matching</span>
+        </div>
+      </div>
+
+      <!-- Main Game Board -->
+      <div class="game-layout">
+        
+        <!-- Left Column: Men Roster and Setup -->
+        <section class="roster-panel side-panel" id="men-panel">
+          <div class="panel-header male-color">
+            <span class="icon">👦🏻</span>
+            <h3>남자 참가자 (MALE)</h3>
+          </div>
+          <div class="participant-list" id="men-list">
+            <!-- Programmatically populated -->
+          </div>
+        </section>
+
+        <!-- Center Column: 63 Building Animation Arena -->
+        <section class="arena-panel">
+          
+          <!-- Fireworks Canvas overlay -->
+          <canvas id="fireworks-canvas"></canvas>
+
+          <!-- 63 Building Graphic Container -->
+          <div class="building-container">
+            <!-- Sky Background Decoration -->
+            <div class="sky-background">
+              <div class="stars"></div>
+              <div class="pixel-moon"></div>
+              <div class="pixel-cloud c1"></div>
+              <div class="pixel-cloud c2"></div>
+            </div>
+
+            <!-- Building Top / Spire -->
+            <div class="building-spire"></div>
+            <div class="building-roof"></div>
+
+            <!-- 63 Building Tower Body -->
+            <div class="building-body">
+              <!-- Window glass blocks (represented in grid) -->
+              <div class="windows-grid">
+                <!-- Javascript will generate windows -->
+              </div>
+
+              <!-- Floor Markings and meeting areas -->
+              <div class="floors-container">
+                <div class="floor-level" data-floor="60" style="bottom: 78%;">
+                  <span class="floor-label">60F</span>
+                  <div class="floor-meeting-spot" id="spot-60"></div>
+                </div>
+                <div class="floor-level" data-floor="50" style="bottom: 60%;">
+                  <span class="floor-label">50F</span>
+                  <div class="floor-meeting-spot" id="spot-50"></div>
+                </div>
+                <div class="floor-level" data-floor="40" style="bottom: 42%;">
+                  <span class="floor-label">40F</span>
+                  <div class="floor-meeting-spot" id="spot-40"></div>
+                </div>
+                <div class="floor-level" data-floor="30" style="bottom: 24%;">
+                  <span class="floor-label">30F</span>
+                  <div class="floor-meeting-spot" id="spot-30"></div>
+                </div>
+                <div class="floor-level" data-floor="20" style="bottom: 6%;">
+                  <span class="floor-label">20F</span>
+                  <div class="floor-meeting-spot" id="spot-20"></div>
+                </div>
+              </div>
+
+              <!-- Left Gondola Track Area (vertical cables) -->
+              <div class="track-area left-track-area">
+                <div class="cable-line cl1"></div>
+                <div class="cable-line cl2"></div>
+                <div class="cable-line cl3"></div>
+                <div class="cable-line cl4"></div>
+                <div class="cable-line cl5"></div>
+                <!-- Men Gondolas will be appended here -->
+                <div id="men-gondolas-container"></div>
+              </div>
+
+              <!-- Right Gondola Track Area (vertical cables) -->
+              <div class="track-area right-track-area">
+                <div class="cable-line cr1"></div>
+                <div class="cable-line cr2"></div>
+                <div class="cable-line cr3"></div>
+                <div class="cable-line cr4"></div>
+                <div class="cable-line cr5"></div>
+                <!-- Women Gondolas will be appended here -->
+                <div id="women-gondolas-container"></div>
+              </div>
+            </div>
+
+            <!-- Ground base -->
+            <div class="building-base">
+              <div class="base-logo">한화생명</div>
+            </div>
+          </div>
+
+          <!-- Bottom Console & Options -->
+          <div class="game-console">
+            <div class="console-row">
+              <div class="setting-group">
+                <label>게임 모드</label>
+                <div class="radio-toggle">
+                  <input type="radio" id="mode-5vs5" name="game-mode" value="5vs5" checked onchange="changeGameMode(this.value)">
+                  <label for="mode-5vs5">5대5 미팅</label>
+                  <input type="radio" id="mode-1vs1" name="game-mode" value="1vs1" onchange="changeGameMode(this.value)">
+                  <label for="mode-1vs1">1대1 매칭</label>
+                </div>
+              </div>
+
+              <div class="setting-group" id="match-option-group">
+                <label>매칭 연출 옵션</label>
+                <div class="radio-toggle">
+                  <input type="radio" id="opt-seq" name="match-option" value="sequential" checked>
+                  <label for="opt-seq">차례대로 매칭</label>
+                  <input type="radio" id="opt-all" name="match-option" value="simultaneous">
+                  <label for="opt-all">동시 전체 매칭</label>
+                </div>
+              </div>
+              
+              <div class="button-group">
+                <button class="btn-secondary" id="btn-rand-all" onclick="randomizeAll()">🎲 전체 랜덤 설정</button>
+                <button class="btn-primary-action" id="btn-start-game" onclick="startGame()">⚡ 매칭 시작!</button>
+                <button class="btn-secondary" id="btn-reset-game" onclick="resetGame()" disabled>🔄 초기화</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Women Roster and Setup -->
+        <section class="roster-panel side-panel" id="women-panel">
+          <div class="panel-header female-color">
+            <span class="icon">👧🏻</span>
+            <h3>여자 참가자 (FEMALE)</h3>
+          </div>
+          <div class="participant-list" id="women-list">
+            <!-- Programmatically populated -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Result Modal (Hidden by default) -->
+      <div id="result-modal" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>🎉 커플 매칭 결과 발표 🎉</h3>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="celebration-banner">
+              <span class="pixel-heart animate-beat">❤️</span>
+              <h2>축하합니다!</h2>
+              <p>63빌딩 로맨틱 매칭에 성공한 커플들입니다.</p>
+            </div>
+            
+            <div class="matched-couples-list" id="modal-matched-list">
+              <!-- Matched couples filled by JS -->
+            </div>
+
+            <div class="unmatched-area" id="modal-unmatched-list">
+              <!-- Unmatched couples details -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-modal-close" onclick="closeModal()">계속 보기</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Game Screen: Guess the Movie Hero -->
+    <main id="game-movie-hero" class="screen">
+      <div class="game-header">
+        <button class="btn-back" onclick="switchScreen('lobby-screen')">◀ 메인 화면</button>
+        <h2 class="game-title-text">🎬 무비 히어로 맞추기</h2>
+        <div class="score-board">
+          <span>SCORE: <strong id="quiz-score">0</strong>점</span>
+          <span>진행도: <strong id="quiz-progress">1/15</strong></span>
+        </div>
+      </div>
+ 
+      <div class="quiz-layout-container">
+        <!-- Center Quiz Card Panel (Left) -->
+        <div class="quiz-card-panel">
+          <div class="quiz-card-header">
+            <span class="quiz-timer-text">⏳ 단계별 자동 분석: <strong id="quiz-timer-seconds">5</strong>초</span>
+          </div>
+ 
+          <div class="timer-container">
+            <div class="timer-bar" id="quiz-timer-bar"></div>
+          </div>
+ 
+          <h3 class="quiz-prompt">이 인물들은 어떤 마블/DC 캐릭터를 연기했을까요?</h3>
+ 
+          <!-- Visual Clues (3D Flipping Cards Grid) -->
+          <div class="clue-images-grid" id="clue-images-container">
+            <!-- Card 0 -->
+            <div class="clue-card locked" id="clue-card-0">
+              <div class="clue-card-inner">
+                <div class="clue-card-front">
+                  <div class="clue-card-title" id="clue-title-0">1단계 힌트</div>
+                  <div class="clue-card-body">
+                    <div class="clue-img-wrapper">
+                      <img id="clue-img-0" src="" alt="Hint 1" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\' viewBox=\'0 0 300 225\'><rect width=\'300\' height=\'225\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'14\'>이미지 로딩 중...</text></svg>';">
+                      <div class="clue-lock-overlay" id="clue-overlay-0">🔒 1단계</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clue-card-back">
+                  <div class="clue-actor-name-container">
+                    <span class="actor-label">배우 이름</span>
+                    <strong class="actor-name" id="clue-actor-0">로딩 중...</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Card 1 -->
+            <div class="clue-card locked" id="clue-card-1">
+              <div class="clue-card-inner">
+                <div class="clue-card-front">
+                  <div class="clue-card-title" id="clue-title-1">2단계 힌트</div>
+                  <div class="clue-card-body">
+                    <div class="clue-img-wrapper">
+                      <img id="clue-img-1" src="" alt="Hint 2" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\' viewBox=\'0 0 300 225\'><rect width=\'300\' height=\'225\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'14\'>이미지 로딩 중...</text></svg>';">
+                      <div class="clue-lock-overlay" id="clue-overlay-1">🔒 2단계</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clue-card-back">
+                  <div class="clue-actor-name-container">
+                    <span class="actor-label">배우 이름</span>
+                    <strong class="actor-name" id="clue-actor-1">로딩 중...</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="clue-card locked" id="clue-card-2">
+              <div class="clue-card-inner">
+                <div class="clue-card-front">
+                  <div class="clue-card-title" id="clue-title-2">3단계 힌트</div>
+                  <div class="clue-card-body">
+                    <div class="clue-img-wrapper">
+                      <img id="clue-img-2" src="" alt="Hint 3" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\' viewBox=\'0 0 300 225\'><rect width=\'300\' height=\'225\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'14\'>이미지 로딩 중...</text></svg>';">
+                      <div class="clue-lock-overlay" id="clue-overlay-2">🔒 3단계</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clue-card-back">
+                  <div class="clue-actor-name-container">
+                    <span class="actor-label">배우 이름</span>
+                    <strong class="actor-name" id="clue-actor-2">로딩 중...</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Text Input for Answers -->
+          <div class="quiz-input-container">
+            <input type="text" id="quiz-answer-input" placeholder="히어로의 이름을 입력하세요" autocomplete="off">
+            <button id="quiz-submit-btn" class="btn-primary-action" onclick="checkTypedAnswer()">제출 ⚡</button>
+          </div>
+ 
+          <!-- Slideshow Control Button -->
+          <div class="quiz-control-container">
+            <button id="quiz-proceed-btn" class="btn-primary-action btn-quiz-flow" onclick="proceedQuizFlow()">⏳ 사진 분석 중...</button>
+          </div>
+        </div>
+ 
+        <!-- Right Side: Answer History Board (오른쪽 정답지) -->
+        <div class="quiz-history-panel">
+          <h3 class="history-title">🎬 정답 판독판</h3>
+          <div class="history-list" id="quiz-history-list">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Overlay Result Modal -->
+      <div id="quiz-result-modal" class="modal-overlay">
+        <div class="modal-content quiz-summary-card">
+          <div class="modal-header">
+            <h3>🎬 퀴즈 결과 발표 🎬</h3>
+          </div>
+          <div class="modal-body">
+            <div class="ticket-stub">
+              <div class="ticket-header">한화생명 무비 시어터</div>
+              <div class="ticket-body">
+                <div class="ticket-row">
+                  <span class="t-label">게임 모드</span>
+                  <span class="t-value">무비 히어로 맞추기</span>
+                </div>
+                <div class="ticket-row">
+                  <span class="t-label">총 문제수</span>
+                  <span class="t-value">15 문제</span>
+                </div>
+                <div class="ticket-row">
+                  <span class="t-label">진행 결과</span>
+                  <span class="t-value">전체 관람 완료 🎬</span>
+                </div>
+                <div class="ticket-row">
+                  <span class="t-label">최종 점수</span>
+                  <span class="t-value"><strong id="ticket-score">0</strong> 점</span>
+                </div>
+                <div class="ticket-row">
+                  <span class="t-label">획득 칭호</span>
+                  <span class="t-value" id="ticket-rank">로딩 중...</span>
+                </div>
+              </div>
+              <div class="ticket-barcode">
+                <div class="barcode-line"></div>
+                <div class="barcode-text">HANWHA-LIFE-HERO-QUIZ</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-modal-close" onclick="restartQuiz()">다시 도전 🔄</button>
+            <button class="btn-modal-close btn-secondary" onclick="switchScreen('lobby-screen')">로비로 이동 ◀</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Feedback Animation Overlay -->
+      <div id="feedback-overlay" class="feedback-overlay">
+        <div id="feedback-content" class="feedback-content">
+          <span class="feedback-icon" id="feedback-icon">⭕</span>
+          <span class="feedback-text" id="feedback-text">정답! +100점</span>
+          <!-- Answer Image Showcase -->
+          <div class="feedback-answer-showcase" id="feedback-answer-showcase">
+            <div class="showcase-title" id="showcase-character-name">배트맨 (Batman)</div>
+            <div class="showcase-img-wrapper">
+              <img id="feedback-answer-img" src="" alt="Correct Answer" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\' viewBox=\'0 0 300 225\'><rect width=\'300\' height=\'225\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'14\'>이미지 로딩 중...</text></svg>';">
+            </div>
+          </div>
+          <!-- Next Question Button inside the Overlay -->
+          <div style="margin-top: 25px; display: flex; justify-content: center; width: 100%;">
+            <button id="overlay-next-btn" class="btn-primary-action btn-quiz-flow" onclick="proceedQuizFlow()">다음 문제로 넘어가기 ➡️</button>
+          </div>
+        </div>
+      </div>
+    </main>
+ 
+    <!-- Game Screen: Guess the Hanwha Face (한화 알기 퀴즈) -->
+    <main id="game-hanwha-quiz" class="screen">
+      <div class="game-header">
+        <button class="btn-back" onclick="switchScreen('lobby-screen')">◀ 메인 화면</button>
+        <h2 class="game-title-text">👤 한화 인물 퀴즈</h2>
+        <div class="score-board">
+          <span>SCORE: <strong id="hanwha-score">0</strong>점</span>
+          <span>진행도: <strong id="hanwha-progress">1/6</strong></span>
+        </div>
+      </div>
+ 
+      <div class="quiz-layout-container">
+        <!-- Left Panel: Quiz Card/Image Frame (Left) -->
+        <div class="quiz-card-panel">
+          <h3 class="quiz-prompt" id="hanwha-subject-label">[창업주] 현암 김종희 선대회장</h3>
+ 
+          <div class="hanwha-image-showcase">
+            <div class="hanwha-img-frame">
+              <img id="hanwha-quiz-img" src="" alt="Hanwha Face" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'><rect width=\'400\' height=\'300\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'16\'>한화 이미지 로딩 중...</text></svg>';">
+            </div>
+          </div>
+ 
+          <!-- Word Length Circles Hint (Shown immediately below picture) -->
+          <div class="hanwha-circles-hint-container">
+            💡 글자수 힌트: <span id="hanwha-circles-text">OOOO</span>
+          </div>
+ 
+          <!-- Explanation/Question Container (Initially hidden, revealed on click) -->
+          <div class="hanwha-question-container">
+            <div id="hanwha-hint-trigger-box" class="hanwha-hint-trigger" onclick="revealHanwhaDescription()">
+              🔍 설명 힌트 보기 (클릭)
+            </div>
+            <p class="hanwha-question-text hidden-desc" id="hanwha-question-content">로딩 중...</p>
+          </div>
+ 
+          <!-- Text Input for Answers -->
+          <div class="quiz-input-container">
+            <input type="text" id="hanwha-answer-input" placeholder="정답을 입력하세요" autocomplete="off">
+            <button id="hanwha-submit-btn" class="btn-primary-action" onclick="checkHanwhaAnswer()">제출 ⚡</button>
+          </div>
+ 
+          <!-- Slideshow Control Button -->
+          <div class="quiz-control-container">
+            <button id="hanwha-proceed-btn" class="btn-primary-action btn-quiz-flow" onclick="proceedHanwhaFlow()">정답 확인 👁️</button>
+          </div>
+        </div>
+ 
+        <!-- Right Side: Answer History Board (오른쪽 정답지) -->
+        <div class="quiz-history-panel">
+          <h3 class="history-title">🍊 정답 판독판</h3>
+          <div class="history-list" id="hanwha-history-list">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Quick Feedback Animation Overlay -->
+      <div id="hanwha-feedback-overlay" class="feedback-overlay">
+        <div class="feedback-content">
+          <span class="feedback-icon" id="hanwha-feedback-icon">⭕</span>
+          <span class="feedback-text" id="hanwha-feedback-text">정답입니다!</span>
+          <!-- Answer Image Showcase -->
+          <div class="feedback-answer-showcase">
+            <div class="showcase-title">정답 공개</div>
+            <div class="showcase-img-wrapper">
+              <img id="hanwha-feedback-answer-img" src="" alt="Answer Face" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\' viewBox=\'0 0 300 225\'><rect width=\'300\' height=\'225\' fill=\'%231E293B\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2364748B\' font-family=\'sans-serif\' font-size=\'14\'>이미지 로딩 중...</text></svg>';">
+            </div>
+            <strong class="showcase-character-name" id="hanwha-showcase-name">사업보국</strong>
+          </div>
+          <!-- Next Question Button inside the Overlay -->
+          <div style="margin-top: 25px; display: flex; justify-content: center; width: 100%;">
+            <button id="hanwha-overlay-next-btn" class="btn-primary-action btn-quiz-flow" onclick="proceedHanwhaFlow()">다음 문제로 넘어가기 ➡️</button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Final Result Modal -->
+      <div id="hanwha-result-modal" class="modal-overlay">
+        <div class="modal-content quiz-summary-card">
+          <div class="ticket-stub">
+            <div class="ticket-header">한화 인물 퀴즈 결과</div>
+            <div class="ticket-body">
+              <div class="ticket-row">
+                <span class="t-label">게임 모드</span>
+                <span class="t-value">한화 알기 👤</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">총 문제수</span>
+                <span class="t-value">6 문제</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">진행 결과</span>
+                <span class="t-value">전체 평가 완료 🎓</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">최종 점수</span>
+                <span class="t-value"><strong id="hanwha-ticket-score">0</strong> 점</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">획득 등급</span>
+                <span class="t-value" id="hanwha-ticket-rank">로딩 중...</span>
+              </div>
+            </div>
+            <div class="ticket-barcode">
+              <div class="barcode-line"></div>
+              <div class="barcode-text">HANWHA-LIFE-FACES-QUIZ</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-modal-close" onclick="restartHanwhaQuiz()">다시 도전 🔄</button>
+            <button class="btn-modal-close btn-secondary" onclick="switchScreen('lobby-screen')">로비로 이동 ◀</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="game.js?v=2.0"></script>
+</body>
+</html>
